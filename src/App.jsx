@@ -266,7 +266,7 @@ export default function App() {
             </div>
 
             {/* Step 1: Buy */}
-            <a href="https://YOUR_GUMROAD_URL_HERE" target="_blank" rel="noopener noreferrer" style={{
+            <a href="https://priddyverse51.gumroad.com/l/uaclxj" target="_blank" rel="noopener noreferrer" style={{
               display: "block", width: "100%", background: "#22d3ee", color: "#0a0a0f",
               border: "none", padding: "14px 0", fontSize: 13, fontFamily: "inherit",
               letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", fontWeight: 700,
