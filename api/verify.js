@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       },
       // 2. Safely stringify the body params
       body: new URLSearchParams({
-        product_id: "d1TaUM8Soccnx3O4X4kKA", 
+        product_id: "Jd1TaUM8Soccnx3O4X4kKA", 
         license_key: license_key.trim(),
       }).toString(), 
     });
