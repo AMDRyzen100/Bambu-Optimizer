@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        product_id: "uaclxj",
+        product_id: "d1TaUM8Soccnx3O4X4kKA",
         license_key,
       }),
     }
