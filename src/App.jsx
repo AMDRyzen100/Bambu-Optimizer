@@ -1,79 +1,79 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const SETTINGS_DB = {
   PLA: {
     "0.2": { quality: { temp: 215, bed: 55, speed: 80, layer: 0.1, retract: 0.5, fan: 100, pa: 0.02, flow: 0.98, accel: 3000 }, balanced: { temp: 220, bed: 60, speed: 150, layer: 0.2, retract: 0.5, fan: 100, pa: 0.025, flow: 0.98, accel: 5000 }, speed: { temp: 225, bed: 60, speed: 300, layer: 0.2, retract: 0.4, fan: 100, pa: 0.03, flow: 1.0, accel: 8000 } },
     "0.4": { quality: { temp: 215, bed: 55, speed: 100, layer: 0.12, retract: 0.5, fan: 100, pa: 0.02, flow: 0.98, accel: 4000 }, balanced: { temp: 220, bed: 60, speed: 200, layer: 0.2, retract: 0.5, fan: 100, pa: 0.025, flow: 0.98, accel: 6000 }, speed: { temp: 225, bed: 60, speed: 400, layer: 0.28, retract: 0.4, fan: 100, pa: 0.03, flow: 1.0, accel: 10000 } },
     "0.6": { quality: { temp: 220, bed: 60, speed: 120, layer: 0.2, retract: 0.6, fan: 100, pa: 0.018, flow: 0.97, accel: 4000 }, balanced: { temp: 225, bed: 60, speed: 250, layer: 0.3, retract: 0.5, fan: 100, pa: 0.022, flow: 0.98, accel: 7000 }, speed: { temp: 230, bed: 65, speed: 450, layer: 0.36, retract: 0.4, fan: 100, pa: 0.028, flow: 1.0, accel: 10000 } },
-    "0.8": { quality: { temp: 220, bed: 60, speed: 100, layer: 0.28, retract: 0.8, fan: 100, pa: 0.015, flow: 0.97, accel: 3000 }, balanced: { temp: 225, bed: 60, speed: 200, layer: 0.4, retract: 0.6, fan: 100, pa: 0.02, flow: 0.98, accel: 6000 }, speed: { temp: 230, bed: 65, speed: 350, layer: 0.48, retract: 0.5, fan: 100, pa: 0.025, flow: 1.0, accel: 9000 } },
+    "0.8": { quality: { temp: 220, bed: 60, speed: 100, layer: 0.28, retract: 0.8, fan: 100, pa: 0.015, flow: 0.97, accel: 3000 }, balanced: { temp: 225, bed: 60, speed: 200, layer: 0.4, retract: 0.6, fan: 100, pa: 0.02, flow: 0.98, accel: 6000 }, speed: { temp: 230, bed: 65, speed: 350, layer: 0.48, retract: 0.5, fan: 100, pa: 0.025, flow: 1.0, accel: 9000 } }
   },
   PETG: {
     "0.4": { quality: { temp: 235, bed: 75, speed: 80, layer: 0.15, retract: 1.0, fan: 40, pa: 0.045, flow: 0.96, accel: 3000 }, balanced: { temp: 240, bed: 80, speed: 150, layer: 0.2, retract: 1.0, fan: 50, pa: 0.05, flow: 0.96, accel: 4000 }, speed: { temp: 245, bed: 85, speed: 250, layer: 0.28, retract: 0.8, fan: 60, pa: 0.055, flow: 0.97, accel: 6000 } },
     "0.2": { quality: { temp: 235, bed: 75, speed: 60, layer: 0.1, retract: 1.0, fan: 30, pa: 0.04, flow: 0.95, accel: 2000 }, balanced: { temp: 240, bed: 80, speed: 120, layer: 0.15, retract: 1.0, fan: 40, pa: 0.045, flow: 0.96, accel: 3500 }, speed: { temp: 245, bed: 85, speed: 200, layer: 0.2, retract: 0.8, fan: 50, pa: 0.05, flow: 0.97, accel: 5000 } },
     "0.6": { quality: { temp: 235, bed: 80, speed: 90, layer: 0.2, retract: 1.2, fan: 40, pa: 0.04, flow: 0.95, accel: 3000 }, balanced: { temp: 240, bed: 80, speed: 170, layer: 0.3, retract: 1.0, fan: 50, pa: 0.045, flow: 0.96, accel: 5000 }, speed: { temp: 245, bed: 85, speed: 280, layer: 0.36, retract: 0.9, fan: 60, pa: 0.05, flow: 0.97, accel: 7000 } },
-    "0.8": { quality: { temp: 235, bed: 80, speed: 80, layer: 0.28, retract: 1.2, fan: 30, pa: 0.035, flow: 0.95, accel: 2500 }, balanced: { temp: 240, bed: 80, speed: 150, layer: 0.4, retract: 1.0, fan: 40, pa: 0.04, flow: 0.96, accel: 4500 }, speed: { temp: 245, bed: 85, speed: 250, layer: 0.48, retract: 0.9, fan: 50, pa: 0.045, flow: 0.97, accel: 6500 } },
+    "0.8": { quality: { temp: 235, bed: 80, speed: 80, layer: 0.28, retract: 1.2, fan: 30, pa: 0.035, flow: 0.95, accel: 2500 }, balanced: { temp: 240, bed: 80, speed: 150, layer: 0.4, retract: 1.0, fan: 40, pa: 0.04, flow: 0.96, accel: 4500 }, speed: { temp: 245, bed: 85, speed: 250, layer: 0.48, retract: 0.9, fan: 50, pa: 0.045, flow: 0.97, accel: 6500 } }
   },
   ABS: { locked: true },
   ASA: { locked: true },
   TPU: { locked: true },
   "PA-CF": { locked: true },
-  PC: { locked: true },
+  PC: { locked: true }
 };
 
 const PRINTERS = [
-  { id: "x1c",    name: "X1C",     free: true  },
-  { id: "p1s",    name: "P1S",     free: true  },
-  { id: "p2s",    name: "P2S",     free: true  },
-  { id: "p1p",    name: "P1P",     free: true  },
-  { id: "a1",     name: "A1",      free: true  },
-  { id: "a1mini", name: "A1 Mini", free: true  },
-  { id: "x2d",    name: "X2D",     free: false },
-  { id: "h2d",    name: "H2D",     free: false },
-  { id: "h2s",    name: "H2S",     free: false },
-  { id: "h2c",    name: "H2C",     free: false },
+  { id: "x1c", name: "X1C", free: true },
+  { id: "p1s", name: "P1S", free: true },
+  { id: "p2s", name: "P2S", free: true },
+  { id: "p1p", name: "P1P", free: true },
+  { id: "a1", name: "A1", free: true },
+  { id: "a1mini", name: "A1 Mini", free: true },
+  { id: "x2d", name: "X2D", free: false },
+  { id: "h2d", name: "H2D", free: false },
+  { id: "h2s", name: "H2S", free: false },
+  { id: "h2c", name: "H2C", free: false }
 ];
 
 const FILAMENTS = [
-  { id: "PLA",   free: true,  color: "#4ade80" },
-  { id: "PETG",  free: true,  color: "#60a5fa" },
-  { id: "ABS",   free: false, color: "#f97316" },
-  { id: "ASA",   free: false, color: "#a78bfa" },
-  { id: "TPU",   free: false, color: "#f43f5e" },
+  { id: "PLA", free: true, color: "#4ade80" },
+  { id: "PETG", free: true, color: "#60a5fa" },
+  { id: "ABS", free: false, color: "#f97316" },
+  { id: "ASA", free: false, color: "#a78bfa" },
+  { id: "TPU", free: false, color: "#f43f5e" },
   { id: "PA-CF", free: false, color: "#94a3b8" },
-  { id: "PC",    free: false, color: "#fbbf24" },
+  { id: "PC", free: false, color: "#fbbf24" }
 ];
 
 const NOZZLES = ["0.2", "0.4", "0.6", "0.8"];
 const GOALS = [
-  { id: "quality",  label: "Max Quality", icon: "◈" },
-  { id: "balanced", label: "Balanced",    icon: "◉" },
-  { id: "speed",    label: "Max Speed",   icon: "◎" },
+  { id: "quality", label: "Max Quality", icon: "◈" },
+  { id: "balanced", label: "Balanced", icon: "◉" },
+  { id: "speed", label: "Max Speed", icon: "◎" }
 ];
 
 const PRINTER_MULTIPLIERS = {
-  a1mini: { speed: 0.80, note: "Compact bed slinger, 500mm/s" },
-  a1:     { speed: 0.85, note: "Bed slinger, great for PLA/PETG, 500mm/s" },
-  p1p:    { speed: 0.90, note: "Open frame CoreXY, 500mm/s" },
-  p1s:    { speed: 0.95, note: "Enclosed CoreXY, 500mm/s, great for ABS/ASA" },
-  x1c:    { speed: 1.00, note: "Enclosed CoreXY, 500mm/s, LiDAR" },
-  x2d:    { speed: 1.05, note: "Dual nozzle, enclosed CoreXY, active chamber" },
-  p2s:    { speed: 1.08, note: "Enclosed CoreXY, 600mm/s, DynaSense extruder" },
-  h2s:    { speed: 1.15, note: "Large CoreXY, 1000mm/s, 65°C chamber, 340×320×340mm" },
-  h2d:    { speed: 1.15, note: "Dual nozzle, 1000mm/s, 65°C chamber, dual ball screw Z" },
-  h2c:    { speed: 1.20, note: "Vortek 6-hotend, 1000mm/s, 65°C chamber, zero purge waste" },
+  a1mini: { speed: 0.8, note: "Compact bed slinger, 500mm/s" },
+  a1: { speed: 0.85, note: "Bed slinger, great for PLA/PETG, 500mm/s" },
+  p1p: { speed: 0.9, note: "Open frame CoreXY, 500mm/s" },
+  p1s: { speed: 0.95, note: "Enclosed CoreXY, 500mm/s, great for ABS/ASA" },
+  x1c: { speed: 1.0, note: "Enclosed CoreXY, 500mm/s, LiDAR" },
+  x2d: { speed: 1.05, note: "Dual nozzle, enclosed CoreXY, active chamber" },
+  p2s: { speed: 1.08, note: "Enclosed CoreXY, 600mm/s, DynaSense extruder" },
+  h2s: { speed: 1.15, note: "Large CoreXY, 1000mm/s, 65°C chamber, 340x320x340mm" },
+  h2d: { speed: 1.15, note: "Dual nozzle, 1000mm/s, 65°C chamber, dual ball screw Z" },
+  h2c: { speed: 1.2, note: "Vortek 6-hotend, 1000mm/s, 65°C chamber, zero purge waste" }
 };
 
 export default function App() {
-  const [printer, setPrinter]       = useState("x1c");
-  const [filament, setFilament]     = useState("PLA");
-  const [nozzle, setNozzle]         = useState("0.4");
-  const [goal, setGoal]             = useState("balanced");
+  const [printer, setPrinter] = useState("x1c");
+  const [filament, setFilament] = useState("PLA");
+  const [nozzle, setNozzle] = useState("0.4");
+  const [goal, setGoal] = useState("balanced");
   const [showPremium, setShowPremium] = useState(false);
-  const [revealed, setRevealed]     = useState(false);
-  const [copied, setCopied]         = useState(null);
-  const [isPro, setIsPro]           = useState(() => localStorage.getItem("bambu_pro") === "true");
+  const [revealed, setRevealed] = useState(false);
+  const [copied, setCopied] = useState(null);
+  const [isPro, setIsPro] = useState(() => typeof window !== "undefined" && localStorage.getItem("bambu_pro") === "true");
   const [licenseKey, setLicenseKey] = useState("");
-  const [keyStatus, setKeyStatus]   = useState(null); // null | "checking" | "valid" | "invalid"
+  const [keyStatus, setKeyStatus] = useState(null);
 
   const verifyLicense = async () => {
     if (!licenseKey.trim()) return;
@@ -82,7 +82,7 @@ export default function App() {
       const res = await fetch("/api/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ license_key: licenseKey.trim() }),
+        body: JSON.stringify({ license_key: licenseKey.trim() })
       });
       const data = await res.json();
       if (data.valid) {
@@ -93,7 +93,7 @@ export default function App() {
       } else {
         setKeyStatus("invalid");
       }
-    } catch {
+    } catch (e) {
       setKeyStatus("invalid");
     }
   };
@@ -104,37 +104,25 @@ export default function App() {
     return () => clearTimeout(t);
   }, [printer, filament, nozzle, goal]);
 
-  const filamentData   = SETTINGS_DB[filament];
-  const isLocked       = !isPro && (filamentData?.locked || PRINTERS.find(p => p.id === printer)?.free === false);
-  const settings       = !isLocked ? filamentData?.[nozzle]?.[goal] : null;
-  const mult           = PRINTER_MULTIPLIERS[printer]?.speed || 1;
-  const adjustedSpeed  = settings ? Math.round(settings.speed * mult) : null;
+  const filamentData = SETTINGS_DB[filament];
+  const isLocked = !isPro && (filamentData?.locked || PRINTERS.find((p) => p.id === printer)?.free === false);
+  const settings = !isLocked ? filamentData?.[nozzle]?.[goal] : null;
+  const mult = PRINTER_MULTIPLIERS[printer]?.speed || 1;
+  const adjustedSpeed = settings ? Math.round(settings.speed * mult) : null;
 
   const copyValue = (key, val) => {
-    navigator.clipboard?.writeText(String(val));
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(String(val));
+    }
     setCopied(key);
     setTimeout(() => setCopied(null), 1200);
   };
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "#0a0a0f",
-      fontFamily: "'IBM Plex Mono', 'Courier New', monospace",
-      color: "#e2e8f0",
-      padding: "0",
-      position: "relative",
-      overflow: "hidden",
-    }}>
-      <div style={{
-        position: "fixed", inset: 0, zIndex: 0,
-        backgroundImage: "linear-gradient(rgba(34,211,238,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.03) 1px, transparent 1px)",
-        backgroundSize: "40px 40px",
-        pointerEvents: "none",
-      }} />
+    <div style={{ minHeight: "100vh", background: "#0a0a0f", fontFamily: "'IBM Plex Mono', 'Courier New', monospace", color: "#e2e8f0", padding: "0", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "fixed", inset: 0, zIndex: 0, backgroundImage: "linear-gradient(rgba(34,211,238,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.03) 1px, transparent 1px)", backgroundSize: "40px 40px", pointerEvents: "none" }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 740, margin: "0 auto", padding: "40px 20px 60px" }}>
-
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
             <div style={{ width: 36, height: 36, border: "1.5px solid #22d3ee", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: "#22d3ee" }}>⬡</div>
@@ -144,51 +132,38 @@ export default function App() {
             Print Settings<br /><span style={{ color: "#22d3ee" }}>Calculator</span>
           </h1>
           <p style={{ margin: "12px 0 0", color: "#64748b", fontSize: 13, letterSpacing: 0.5 }}>
-            Tuned profiles for Bambu Lab printers — select your config below
+            Tuned profiles for Bambu Lab printers - select your config below
           </p>
         </div>
 
         <div style={{ display: "grid", gap: 20, marginBottom: 24 }}>
-          <Section label="01 — PRINTER">
+          <Section label="01 - PRINTER">
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {PRINTERS.map(p => (
-                <Chip 
-                  key={p.id} 
-                  active={printer === p.id} 
-                  locked={!p.free && !isPro}
-                  onClick={() => (p.free || isPro) ? setPrinter(p.id) : setShowPremium(true)} 
-                  label={p.name} 
-                />
+              {PRINTERS.map((p) => (
+                <Chip key={p.id} active={printer === p.id} locked={!p.free && !isPro} onClick={() => (p.free || isPro ? setPrinter(p.id) : setShowPremium(true))} label={p.name} />
               ))}
             </div>
           </Section>
 
-          <Section label="02 — FILAMENT">
+          <Section label="02 - FILAMENT">
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {FILAMENTS.map(f => (
-                <Chip 
-                  key={f.id} 
-                  active={filament === f.id} 
-                  locked={!f.free && !isPro} 
-                  accentColor={f.color}
-                  onClick={() => (f.free || isPro) ? setFilament(f.id) : setShowPremium(true)} 
-                  label={f.id} 
-                />
+              {FILAMENTS.map((f) => (
+                <Chip key={f.id} active={filament === f.id} locked={!f.free && !isPro} accentColor={f.color} onClick={() => (f.free || isPro ? setFilament(f.id) : setShowPremium(true))} label={f.id} />
               ))}
             </div>
           </Section>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-            <Section label="03 — NOZZLE (mm)">
+            <Section label="03 - NOZZLE (mm)">
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {NOZZLES.map(n => (
+                {NOZZLES.map((n) => (
                   <Chip key={n} active={nozzle === n} onClick={() => setNozzle(n)} label={n} />
                 ))}
               </div>
             </Section>
-            <Section label="04 — GOAL">
+            <Section label="04 - GOAL">
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {GOALS.map(g => (
+                {GOALS.map((g) => (
                   <Chip key={g.id} active={goal === g.id} onClick={() => setGoal(g.id)} label={`${g.icon} ${g.label}`} wide />
                 ))}
               </div>
@@ -209,12 +184,12 @@ export default function App() {
               <div style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 10, letterSpacing: 3, color: "#475569", marginBottom: 12, textTransform: "uppercase" }}>Core Settings</div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
-                  <StatRow label="Nozzle Temp"  value={`${settings.temp}°C`}       k="temp"    copied={copied} onCopy={copyValue} color="#f97316" revealed={revealed} delay={0} />
-                  <StatRow label="Bed Temp"     value={`${settings.bed}°C`}        k="bed"     copied={copied} onCopy={copyValue} color="#f59e0b" revealed={revealed} delay={1} />
-                  <StatRow label="Print Speed"  value={`${adjustedSpeed} mm/s`}    k="speed"   copied={copied} onCopy={copyValue} color="#22d3ee" revealed={revealed} delay={2} />
-                  <StatRow label="Layer Height" value={`${settings.layer} mm`}     k="layer"   copied={copied} onCopy={copyValue} color="#4ade80" revealed={revealed} delay={3} />
-                  <StatRow label="Retraction"   value={`${settings.retract} mm`}   k="retract" copied={copied} onCopy={copyValue} color="#a78bfa" revealed={revealed} delay={4} />
-                  <StatRow label="Fan Speed"    value={`${settings.fan}%`}         k="fan"     copied={copied} onCopy={copyValue} color="#60a5fa" revealed={revealed} delay={5} />
+                  <StatRow label="Nozzle Temp" value={`${settings.temp}°C`} k="temp" copied={copied} onCopy={copyValue} color="#f97316" revealed={revealed} delay={0} />
+                  <StatRow label="Bed Temp" value={`${settings.bed}°C`} k="bed" copied={copied} onCopy={copyValue} color="#f59e0b" revealed={revealed} delay={1} />
+                  <StatRow label="Print Speed" value={`${adjustedSpeed} mm/s`} k="speed" copied={copied} onCopy={copyValue} color="#22d3ee" revealed={revealed} delay={2} />
+                  <StatRow label="Layer Height" value={`${settings.layer} mm`} k="layer" copied={copied} onCopy={copyValue} color="#4ade80" revealed={revealed} delay={3} />
+                  <StatRow label="Retraction" value={`${settings.retract} mm`} k="retract" copied={copied} onCopy={copyValue} color="#a78bfa" revealed={revealed} delay={4} />
+                  <StatRow label="Fan Speed" value={`${settings.fan}%`} k="fan" copied={copied} onCopy={copyValue} color="#60a5fa" revealed={revealed} delay={5} />
                 </div>
               </div>
 
@@ -222,9 +197,9 @@ export default function App() {
                 <div>
                   <div style={{ fontSize: 10, letterSpacing: 3, color: "#475569", marginBottom: 12, textTransform: "uppercase" }}>Advanced Settings</div>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
-                    <StatRow label="Pressure Advance" value={`${settings.pa}`}          k="pa"    copied={copied} onCopy={copyValue} color="#22d3ee" revealed={revealed} delay={6} />
-                    <StatRow label="Flow Ratio"        value={`${settings.flow}`}         k="flow"  copied={copied} onCopy={copyValue} color="#4ade80" revealed={revealed} delay={7} />
-                    <StatRow label="Accel"             value={`${settings.accel} mm/s²`} k="accel" copied={copied} onCopy={copyValue} color="#f97316" revealed={revealed} delay={8} />
+                    <StatRow label="Pressure Advance" value={`${settings.pa}`} k="pa" copied={copied} onCopy={copyValue} color="#22d3ee" revealed={revealed} delay={6} />
+                    <StatRow label="Flow Ratio" value={`${settings.flow}`} k="flow" copied={copied} onCopy={copyValue} color="#4ade80" revealed={revealed} delay={7} />
+                    <StatRow label="Accel" value={`${settings.accel} mm/s²`} k="accel" copied={copied} onCopy={copyValue} color="#f97316" revealed={revealed} delay={8} />
                   </div>
                 </div>
               ) : (
@@ -232,17 +207,16 @@ export default function App() {
                   <div style={{ filter: "blur(4px)", opacity: 0.4, pointerEvents: "none" }}>
                     <div style={{ fontSize: 10, letterSpacing: 3, color: "#475569", marginBottom: 12, textTransform: "uppercase" }}>Advanced Settings</div>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
-                      <StatRow label="Pressure Advance" value="0.0XX"       k="pa"    copied={null} onCopy={() => {}} color="#22d3ee" revealed={true} delay={0} />
-                      <StatRow label="Flow Ratio"        value="X.XX"        k="flow"  copied={null} onCopy={() => {}} color="#4ade80" revealed={true} delay={0} />
-                      <StatRow label="Accel"             value="XXXX mm/s²" k="accel" copied={null} onCopy={() => {}} color="#f97316" revealed={true} delay={0} />
+                      <StatRow label="Pressure Advance" value="0.0XX" k="pa" copied={null} onCopy={() => {}} color="#22d3ee" revealed={true} delay={0} />
+                      <StatRow label="Flow Ratio" value="X.XX" k="flow" copied={null} onCopy={() => {}} color="#4ade80" revealed={true} delay={0} />
+                      <StatRow label="Accel" value="XXXX mm/s²" k="accel" copied={null} onCopy={() => {}} color="#f97316" revealed={true} delay={0} />
                     </div>
                   </div>
                   <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
                     <div style={{ fontSize: 11, color: "#64748b", letterSpacing: 2, textTransform: "uppercase" }}>Advanced settings locked</div>
-                    <button onClick={() => setShowPremium(true)} style={{
-                      background: "#22d3ee", color: "#0a0a0f", border: "none", padding: "8px 20px",
-                      fontSize: 11, fontFamily: "inherit", letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", fontWeight: 700,
-                    }}>Unlock Pro — $7</button>
+                    <button onClick={() => setShowPremium(true)} style={{ background: "#22d3ee", color: "#0a0a0f", border: "none", padding: "8px 20px", fontSize: 11, fontFamily: "inherit", letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", fontWeight: 700 }}>
+                      Unlock Pro - $7
+                    </button>
                   </div>
                 </div>
               )}
@@ -258,16 +232,14 @@ export default function App() {
       </div>
 
       {showPremium && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}
-          onClick={() => { setShowPremium(false); setKeyStatus(null); setLicenseKey(""); }}>
-          <div style={{ background: "#0d1117", border: "1px solid #22d3ee", padding: 36, maxWidth: 420, width: "100%", position: "relative" }}
-            onClick={e => e.stopPropagation()}>
+        <div style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }} onClick={() => { setShowPremium(false); setKeyStatus(null); setLicenseKey(""); }}>
+          <div style={{ background: "#0d1117", border: "1px solid #22d3ee", padding: 36, maxWidth: 420, width: "100%", position: "relative" }} onClick={(e) => e.stopPropagation()}>
             <div style={{ fontSize: 10, letterSpacing: 4, color: "#22d3ee", marginBottom: 16, textTransform: "uppercase" }}>Pro Access</div>
             <h2 style={{ margin: "0 0 16px", fontSize: 24, fontWeight: 700 }}>Unlock Everything</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
-              {["ABS, ASA, TPU, PA-CF, PC profiles","Pressure Advance values per filament","Flow ratio & acceleration tuning","X2D dual-nozzle profiles","All future filament additions"].map(f => (
+              {["ABS, ASA, TPU, PA-CF, PC profiles", "Pressure Advance values per filament", "Flow ratio & acceleration tuning", "X2D dual-nozzle profiles", "All future filament additions"].map((f) => (
                 <div key={f} style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 13, color: "#94a3b8" }}>
-                  <span style={{ color: "#22d3ee" }}>→</span> {f}
+                  <span style={{ color: "#22d3ee" }}>{">"}</span> {f}
                 </div>
               ))}
             </div>
@@ -276,44 +248,119 @@ export default function App() {
               <span style={{ fontSize: 12, color: "#475569" }}>one-time · instant access</span>
             </div>
 
-            <a href="https://bambuoptimizer.gumroad.com/l/uaclxj" target="_blank" rel="noopener noreferrer" style={{
-              display: "block", width: "100%", background: "#22d3ee", color: "#0a0a0f",
-              border: "none", padding: "14px 0", fontSize: 13, fontFamily: "inherit",
-              letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", fontWeight: 700,
-              marginBottom: 16, textAlign: "center", textDecoration: "none",
-            }}>Get Pro Access → $7</a>
+            <a href="https://bambuoptimizer.gumroad.com/l/uaclxj" target="_blank" rel="noopener noreferrer" style={{ display: "block", width: "100%", background: "#22d3ee", color: "#0a0a0f", border: "none", padding: "14px 0", fontSize: 13, fontFamily: "inherit", letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", fontWeight: 700, marginBottom: 16, textAlign: "center", textDecoration: "none" }}>
+              Get Pro Access - $7
+            </a>
 
             <div style={{ borderTop: "1px solid #1e293b", paddingTop: 16 }}>
               <div style={{ fontSize: 10, letterSpacing: 2, color: "#475569", marginBottom: 10, textTransform: "uppercase" }}>Already purchased? Enter your license key</div>
               <div style={{ display: "flex", gap: 8 }}>
                 <input
                   value={licenseKey}
-                  onChange={e => { setLicenseKey(e.target.value); setKeyStatus(null); }}
-                  onKeyDown={e => e.key === "Enter" && verifyLicense()}
+                  onChange={(e) => { setLicenseKey(e.target.value); setKeyStatus(null); }}
+                  onKeyDown={(e) => e.key === "Enter" && verifyLicense()}
                   placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-                  style={{
-                    flex: 1, background: "#0a0a0f", border: `1px solid ${keyStatus === "invalid" ? "#f43f5e" : keyStatus === "valid" ? "#4ade80" : "#2d3748"}`,
-                    color: "#e2e8f0", padding: "10px 12px", fontSize: 11,
-                    fontFamily: "inherit", letterSpacing: 1, outline: "none",
-                  }}
+                  style={{ flex: 1, background: "#0a0a0f", border: `1px solid ${keyStatus === "invalid" ? "#f43f5e" : keyStatus === "valid" ? "#4ade80" : "#2d3748"}`, color: "#e2e8f0", padding: "10px 12px", fontSize: 11, fontFamily: "inherit", letterSpacing: 1, outline: "none" }}
                 />
-                <button onClick={verifyLicense} disabled={keyStatus === "checking"} style={{
-                  background: "transparent", border: "1px solid #22d3ee", color: "#22d3ee",
-                  padding: "10px 16px", fontSize: 11, fontFamily: "inherit",
-                  letterSpacing: 1, cursor: "pointer", whiteSpace: "nowrap",
-                }}>
-                  {keyStatus === "checking" ? "..." : keyStatus === "valid" ? "✓" : "Verify"}
+                <button onClick={verifyLicense} disabled={keyStatus === "checking"} style={{ background: "transparent", border: "1px solid #22d3ee", color: "#22d3ee", padding: "10px 16px", fontSize: 11, fontFamily: "inherit", letterSpacing: 1, cursor: "pointer", whiteSpace: "nowrap" }}>
+                  {keyStatus === "checking" ? "..." : keyStatus === "valid" ? "OK" : "Verify"}
                 </button>
               </div>
-              {keyStatus === "invalid" && (
-                <div style={{ fontSize: 11, color: "#f43f5e", marginTop: 8 }}>Invalid key — check your Gumroad receipt and try again</div>
-              )}
-              {keyStatus === "valid" && (
-                <div style={{ fontSize: 11, color: "#4ade80", marginTop: 8 }}>✓ Unlocked! Welcome to Pro</div>
-              )}
+              {keyStatus === "invalid" && <div style={{ fontSize: 11, color: "#f43f5e", marginTop: 8 }}>Invalid key - check your Gumroad receipt and try again</div>}
+              {keyStatus === "valid" && <div style={{ fontSize: 11, color: "#4ade80", marginTop: 8 }}>Unlocked! Welcome to Pro</div>}
             </div>
 
-            <button onClick={() => { setShowPremium(false); setKeyStatus(null); setLicenseKey(""); }} style={{
-              width: "100%", background: "transparent", color: "#475569",
-              border: "1px solid #1e293b", padding: "10px 0", fontSize: 11,
-              fontFamily: "
+            <button onClick={() => { setShowPremium(false); setKeyStatus(null); setLicenseKey(""); }} style={{ width: "100%", background: "transparent", color: "#475569", border: "1px solid #1e293b", padding: "10px 0", fontSize: 11, fontFamily: "inherit", letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", marginTop: 12 }}>
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Section({ label, children }) {
+  return (
+    <div style={{ background: "#0d1117", border: "1px solid #1e293b", padding: 16, borderRadius: 2 }}>
+      <div style={{ fontSize: 10, letterSpacing: 2, color: "#475569", marginBottom: 12, textTransform: "uppercase" }}>{label}</div>
+      {children}
+    </div>
+  );
+}
+
+function Chip({ active, locked, accentColor, onClick, label, wide }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        background: active ? accentColor || "#22d3ee" : "#0a0a0f",
+        color: active ? "#0a0a0f" : locked ? "#475569" : "#e2e8f0",
+        border: `1px solid ${active ? accentColor || "#22d3ee" : locked ? "#1e293b" : "#334155"}`,
+        padding: wide ? "10px 14px" : "8px 14px",
+        fontSize: 12,
+        fontFamily: "inherit",
+        cursor: "pointer",
+        fontWeight: active ? 700 : 400,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: wide ? "space-between" : "center",
+        gap: 6,
+        transition: "all 0.15s ease",
+        width: wide ? "100%" : "auto",
+        opacity: locked ? 0.7 : 1
+      }}
+    >
+      <span>{label}</span>
+      {locked && <span style={{ fontSize: 10, color: "#f59e0b" }}>🔒</span>}
+    </button>
+  );
+}
+
+function LockedOutput({ onUnlock, filament, printer }) {
+  return (
+    <div style={{ padding: 40, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+      <div style={{ fontSize: 32 }}>🔒</div>
+      <div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0", marginBottom: 6 }}>
+          {filament} / {printer.toUpperCase()} Profile Locked
+        </div>
+        <div style={{ fontSize: 12, color: "#64748b" }}>
+          This filament or printer profile is available exclusively for Bambu Optimizer Pro users.
+        </div>
+      </div>
+      <button onClick={onUnlock} style={{ background: "#22d3ee", color: "#0a0a0f", border: "none", padding: "10px 24px", fontSize: 11, fontFamily: "inherit", letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", fontWeight: 700, marginTop: 8 }}>
+        Unlock Pro Access
+      </button>
+    </div>
+  );
+}
+
+function StatRow({ label, value, k, copied, onCopy, color, revealed, delay }) {
+  const isCopied = copied === k;
+  return (
+    <div
+      onClick={() => onCopy(k, value)}
+      style={{
+        background: "#0a0a0f",
+        border: "1px solid #1e293b",
+        padding: "12px 14px",
+        cursor: "pointer",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        opacity: revealed ? 1 : 0,
+        transform: revealed ? "translateY(0)" : "translateY(4px)",
+        transition: `all 0.2s ease ${delay * 0.04}s`
+      }}
+    >
+      <div>
+        <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{label}</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: color || "#e2e8f0" }}>{value}</div>
+      </div>
+      <div style={{ fontSize: 10, color: isCopied ? "#4ade80" : "#475569", textTransform: "uppercase", letterSpacing: 1 }}>
+        {isCopied ? "Copied!" : "Copy"}
+      </div>
+    </div>
+  );
+}
