@@ -152,8 +152,13 @@ export default function App() {
           <Section label="01 — PRINTER">
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {PRINTERS.map(p => (
-                <Chip key={p.id} active={printer === p.id} locked={!p.free}
-                  onClick={() => p.free ? setPrinter(p.id) : setShowPremium(true)} label={p.name} />
+                <Chip 
+                  key={p.id} 
+                  active={printer === p.id} 
+                  locked={!p.free && !isPro}
+                  onClick={() => (p.free || isPro) ? setPrinter(p.id) : setShowPremium(true)} 
+                  label={p.name} 
+                />
               ))}
             </div>
           </Section>
@@ -161,8 +166,14 @@ export default function App() {
           <Section label="02 — FILAMENT">
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {FILAMENTS.map(f => (
-                <Chip key={f.id} active={filament === f.id} locked={!f.free} accentColor={f.color}
-                  onClick={() => f.free ? setFilament(f.id) : setShowPremium(true)} label={f.id} />
+                <Chip 
+                  key={f.id} 
+                  active={filament === f.id} 
+                  locked={!f.free && !isPro} 
+                  accentColor={f.color}
+                  onClick={() => (f.free || isPro) ? setFilament(f.id) : setShowPremium(true)} 
+                  label={f.id} 
+                />
               ))}
             </div>
           </Section>
@@ -265,7 +276,6 @@ export default function App() {
               <span style={{ fontSize: 12, color: "#475569" }}>one-time · instant access</span>
             </div>
 
-            {/* Step 1: Buy */}
             <a href="https://bambuoptimizer.gumroad.com/l/uaclxj" target="_blank" rel="noopener noreferrer" style={{
               display: "block", width: "100%", background: "#22d3ee", color: "#0a0a0f",
               border: "none", padding: "14px 0", fontSize: 13, fontFamily: "inherit",
@@ -273,7 +283,6 @@ export default function App() {
               marginBottom: 16, textAlign: "center", textDecoration: "none",
             }}>Get Pro Access → $7</a>
 
-            {/* Step 2: Enter license key */}
             <div style={{ borderTop: "1px solid #1e293b", paddingTop: 16 }}>
               <div style={{ fontSize: 10, letterSpacing: 2, color: "#475569", marginBottom: 10, textTransform: "uppercase" }}>Already purchased? Enter your license key</div>
               <div style={{ display: "flex", gap: 8 }}>
@@ -307,78 +316,4 @@ export default function App() {
             <button onClick={() => { setShowPremium(false); setKeyStatus(null); setLicenseKey(""); }} style={{
               width: "100%", background: "transparent", color: "#475569",
               border: "1px solid #1e293b", padding: "10px 0", fontSize: 11,
-              fontFamily: "inherit", letterSpacing: 2, textTransform: "uppercase",
-              cursor: "pointer", marginTop: 12,
-            }}>Maybe later</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Section({ label, children }) {
-  return (
-    <div style={{ border: "1px solid #1e293b", padding: 16, background: "#0d1117" }}>
-      <div style={{ fontSize: 10, letterSpacing: 3, color: "#475569", marginBottom: 12, textTransform: "uppercase" }}>{label}</div>
-      {children}
-    </div>
-  );
-}
-
-function Chip({ active, locked, onClick, label, accentColor, wide }) {
-  return (
-    <button onClick={onClick} style={{
-      background: active ? (accentColor || "#22d3ee") : "transparent",
-      color: active ? "#0a0a0f" : locked ? "#334155" : "#94a3b8",
-      border: `1px solid ${active ? (accentColor || "#22d3ee") : locked ? "#1e293b" : "#2d3748"}`,
-      padding: wide ? "8px 16px" : "6px 14px",
-      fontSize: 12, fontFamily: "inherit", letterSpacing: 1,
-      cursor: "pointer", fontWeight: active ? 700 : 400,
-      display: "flex", alignItems: "center", gap: 6,
-      width: wide ? "100%" : "auto",
-      transition: "all 0.15s",
-      position: "relative",
-    }}>
-      {locked && <span style={{ fontSize: 10, opacity: 0.6 }}>⬡</span>}
-      {label}
-    </button>
-  );
-}
-
-function StatRow({ label, value, k, copied, onCopy, color, revealed, delay }) {
-  return (
-    <div onClick={() => onCopy(k, value)} style={{
-      display: "flex", justifyContent: "space-between", alignItems: "center",
-      padding: "10px 12px", background: "#0a0a0f", cursor: "pointer",
-      borderLeft: `2px solid ${color}`,
-      opacity: revealed ? 1 : 0,
-      transform: revealed ? "translateX(0)" : "translateX(-8px)",
-      transition: `opacity 0.2s ${delay * 0.05}s, transform 0.2s ${delay * 0.05}s`,
-    }} title="Click to copy">
-      <span style={{ fontSize: 11, color: "#475569", letterSpacing: 1 }}>{label}</span>
-      <span style={{ fontSize: 13, color: copied === k ? "#4ade80" : "#e2e8f0", fontWeight: 600, letterSpacing: 1 }}>
-        {copied === k ? "✓ copied" : value}
-      </span>
-    </div>
-  );
-}
-
-function LockedOutput({ onUnlock, filament, printer }) {
-  const isPrinterLocked = !PRINTERS.find(p => p.id === printer)?.free;
-  return (
-    <div style={{ padding: 40, textAlign: "center" }}>
-      <div style={{ fontSize: 24, marginBottom: 16, color: "#22d3ee" }}>⬡</div>
-      <div style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>
-        {isPrinterLocked ? `${printer.toUpperCase()} profiles are Pro only` : `${filament} profiles are Pro only`}
-      </div>
-      <div style={{ fontSize: 12, color: "#475569", marginBottom: 24 }}>
-        Unlock all filaments, advanced settings, and X2D profiles
-      </div>
-      <button onClick={onUnlock} style={{
-        background: "#22d3ee", color: "#0a0a0f", border: "none", padding: "10px 28px",
-        fontSize: 12, fontFamily: "inherit", letterSpacing: 2, textTransform: "uppercase", cursor: "pointer", fontWeight: 700,
-      }}>Unlock Pro — $7</button>
-    </div>
-  );
-}
+              fontFamily: "
